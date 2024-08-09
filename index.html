@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulación de Menú USSD</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <h1>Simulación de Menú USSD</h1>
+    <p>Ingresa un número para seleccionar una opción:</p>
+    <ul>
+        <li>1. Consultar Saldo</li>
+        <li>2. Comprar Tiempo Aire</li>
+        <li>3. Comprar Datos</li>
+        <li>4. Atención al Cliente</li>
+    </ul>
+    <form id="ussdForm">
+        <input type="text" id="seleccion" name="seleccion" placeholder="Ingresa el número de la opción">
+        <button type="submit">Enviar</button>
+    </form>
+    <div id="response"></div>
+
+    <script>
+        document.getElementById('ussdForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const seleccion = document.getElementById('seleccion').value;
+            const response = await fetch('/ussd', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `seleccion=${encodeURIComponent(seleccion)}`,
+            });
+            const data = await response.json();
+            const responseDiv = document.getElementById('response');
+            responseDiv.textContent = data.response;
+        });
+    </script>
+</body>
+</html>
